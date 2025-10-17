@@ -7,6 +7,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Filme> filmes = new ArrayList<>();
     private FilmeAdapter adapter;
     private Database db;
+    private ToggleButton tglVistosNoCinema;
 
 
     @Override
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         chkJaViuNoCinema = findViewById(R.id.chkJaViuNoCinema);
         numAnoDeLancamento = findViewById(R.id.numAnoDeLancamento);
         rcvListaFilmes = findViewById(R.id.rcvListaFilmes);
+        tglVistosNoCinema = findViewById(R.id.tglVistosNoCinema);
 
         btnSave.setOnClickListener(this::salvarFilme);
 
@@ -89,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void carregarFilmes() {
-        db.carregarFilmes()
+        db.carregarFilmes(tglVistosNoCinema.isChecked())
                 .addOnFailureListener(e ->
                         Toast.makeText(this, "Houve um problema ao carregar os filmes", Toast.LENGTH_SHORT).show())
                 .addOnSuccessListener(list -> {
@@ -109,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
 
                     }
 
-                    filmes.sort(Comparator.comparing(f -> f.generoString));
                     adapter.notifyDataSetChanged();
                     Toast.makeText(this, "Filmes carregados com sucesso!", Toast.LENGTH_SHORT).show();
                 });

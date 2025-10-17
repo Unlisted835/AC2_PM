@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -96,8 +97,11 @@ public class Database {
         }
     }
 
-    public Task<List<Filme>> carregarFilmes() {
-        return db.collection("filmes").get()
+    public Task<List<Filme>> carregarFilmes(boolean filtrarVistosNoCinema) {
+        return db.collection("filmes")
+                .where(Filter.equalTo("jaViuNoCinema", filtrarVistosNoCinema))
+                .orderBy("titulo")
+                .get()
                 .continueWith(task -> {
                     if (task.isSuccessful()) {
                         filmes.clear();
